@@ -1,0 +1,30 @@
+{{/* Command - Auction */}}
+{{/* Configuration Starts */}}
+{{$log := 901994588921798687}}
+{{$col := 255}}
+{{/* Configuration Ends */}}
+{{/* Actual Code Below - DONT TOUCH UNLESS YOU KNOW WHAT YOU ARE DOING */}}
+
+{{$args := (parseArgs 1 "Correct Syntax is `+Auction <Item> <Price>`"
+        (carg "string" "Item")
+        (carg "int" "Price"))}}
+{{$Author := .Author.Mention}}
+{{dbSet 3 $Author "Author"}}
+{{$item := $args.Get 0}}
+{{$sp := $args.Get 1}}
+{{dbSet 0 "item" (sdict "item" $item "price" $sp)}}
+{{$error := ""}}
+{{$embed := sdict
+            "title" "**Auction Listing**"
+            "description" (print " Item - __" ($args.Get 0) "__" " \n  This item has been listed for __" ($args.Get 1) "__")
+            "color" $col
+            "author" (sdict "name" (str $.User) "icon_url" ($.User.AvatarURL "512"))
+            "timestamp" currentTime
+            "footer" (sdict "text" (print "Author ID - " $.User.ID))
+        }}
+{{$d := sendMessageRetID $log (cembed $embed)}}
+{{addMessageReactions $log $d "⛔"}}
+
+
+
+
